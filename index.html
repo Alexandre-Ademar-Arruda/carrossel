@@ -5,8 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=360, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
-     <script src="index.js" async></script>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        width: 360px;
+        margin: auto;
+        display: flex;
+        background-color: black;
+    }
+    h1 {
+        color: white;
+        text-align: center;
+        margin-top: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 24px;
+        background-color: transparent;
+        word-spacing: 20px;
+        letter-spacing: 1px;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .slide-show-container {
+        position: relative;
+        width: 90%;
+        max-width: 300px;
+        height: auto;
+        margin-top: 30px;
+    }
+
+    .slides {
+        height: 100%;
+    }
+
+    .slide {
+        width: 100%;
+        height: 100%;
+
+        display: none;
+    }
+
+    .slide[data-active] {
+        display: block;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        max-width: 300px;
+        max-height: 600px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+
+        width: 56px;
+        height: 56px;
+        font-size: 32px;
+        font-weight: bold;
+
+        color: #fff;
+        background-color: transparent;
+        border: 2px;
+    }
+
+    .previous {
+        left: 0;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+
+    .next {
+        right: 0;
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
+
+    .btn {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .fade {
+        animation-name: fade;
+        animation-duration: 1.2s;
+    }
+
+    @keyframes fade {
+    from {
+        opacity: 0.8;
+    }
+    
+    to {
+        opacity: 1;
+    }
+    }
+
+    @media (max-width: 400px) {
+    .btn {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .slide-show-container {
+        max-width: 280px;
+    }
+
+    .slide img {
+        max-height: 500px;
+    }
+    }
+
+    </style>
+     
     <title>Document</title>
 </head>
 <body>
@@ -22,5 +148,33 @@
         <div class="actions">
         </div>
     </section>
+    <script>
+        const ChangeSlideButton = document.querySelectorAll('[data-change-slide-button]'); //capitura os 2 buttons com atrib ... e adiciona na changeSlideButton
+        ChangeSlideButton.forEach(button=> { // aqui percorre changeSlideButton
+            button.addEventListener('click', () => { // adiciona nele o envento click 
+                //precisamos descobrir qual slide esta ativo e qual button recebeu o click
+                const slides = document.querySelector('.slides'); //pra isso vamos capturar a ul que tem a lista com slides
+                const activeSlide = slides.querySelector('[data-active]');// aqui vamos capturar o slide que tem o atributo data-active
+                let indexActiveSlide = Array.from(slides.children).indexOf(activeSlide);//aqui vamos  adicionar o index do slide ativo no indexActiveSlide
+                //console.log(indexActiveSlide);
+                
+                indexActiveSlide = button.dataset.ChangeSlideButton === 'next' 
+                ? indexActiveSlide + 1 
+                : indexActiveSlide - 1 // se o button que recebeu o click for o next ele soma 1 no index do slide ativo se for o previous ele subtrai 1
+                
+                if(indexActiveSlide >= slides.children.length) {
+                    indexActiveSlide = 0;
+                }
+                if(indexActiveSlide < 0) {
+                    indexActiveSlide = slides.children.length -1; // aqui faz o loop do slide, se o index for maior ou igual ao tamanho da lista ele volta pro 0, se for menor que 0 ele volta pro ultimo slide
+                }
+                activeSlide.removeAttribute('data-active');
+                slides.children[indexActiveSlide].dataset.active = true; 
+
+            })
+        })
+
+
+    </script>
 </body>
 </html>
